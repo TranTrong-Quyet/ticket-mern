@@ -6,9 +6,11 @@ import {
   getMe,
 } from "../controllers/UserController.js";
 
+import { protectRoute } from "../middleware/authMiddleware.js";
+
 UserRouter.post("/", registerUser);
 
 UserRouter.post("/login", loginUser);
-UserRouter.get("/me", getMe);
+UserRouter.get("/me", protectRoute, getMe);
 
 export default UserRouter;

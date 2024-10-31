@@ -12,7 +12,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!name || !email || !password) {
     res.status(400);
-    throw new Error("Please include all fields");
+    throw new Error("Please include all fields to register");
   }
 
   // Check if user exists
@@ -20,7 +20,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (userExist) {
     res.status(400);
-    throw new Error("user already exist");
+    throw new Error("User already exist");
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -70,7 +70,12 @@ const loginUser = asyncHandler(async (req, res) => {
 // api/user/me
 // private
 const getMe = asyncHandler(async (req, res) => {
-  res.send("Me here");
+  const user = {
+    name: req.user.name,
+    id: req.user._id,
+    email: req.user.email,
+  };
+  res.status(200).json(user);
 });
 
 // generate jsonwebtoken
