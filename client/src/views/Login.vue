@@ -1,24 +1,50 @@
 <script setup>
 
+import axios from 'axios'
 import { useAuthStore } from '@/stores/auth';
-const authStore = useAuthStore()
+import { useToast } from 'primevue/usetoast';
+import Toast from 'primevue/toast';
+import { useRouter } from 'vue-router';
 
-import { ref, reactive, toRefs } from 'vue';
+const router = useRouter()
+const authStore = useAuthStore()
+const toast = useToast()
+
+import { ref, reactive, toRefs, TrackOpTypes } from 'vue';
 const fromData = ref({
   email: "",
   password: "",
 })
 
-
 const { email, password } = toRefs(fromData.value)
 
-const onFormSubmit = () => {
-  if (email.value && password.value) {
-    const userData = {
-      email: email.value,
-      password: password.value,
+const showError = (summary, detail) => {
+  toast.add({
+    severity: "error",
+    summary,
+    detail,
+    life: 3000,
+  })
+}
+
+const onFormSubmit = async () => {
+  try {
+    if (!email.value || !password.value) {
+      showError('Hey', 'Please enter your account')
     }
-    authStore.login(userData)
+    if (email.value && password.value) {
+      const userData = {
+        email: email.value,
+        password: password.value,
+
+      }
+      authStore.login(userData)
+
+      router.push('/')
+    }
+
+  } catch (error) {
+    console.log('Error when submit login form', error)
   }
 }
 
@@ -29,8 +55,8 @@ const onFormSubmit = () => {
 </script>
 
 <template>
-
   <div class="h-ful">
+    <Toast />
     <section class="py-20 flex flex-col item-center">
       <h2 class=" self-center text-3xl font-medium pb-10">Login</h2>
       <div>

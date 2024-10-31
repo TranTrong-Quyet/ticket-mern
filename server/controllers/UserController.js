@@ -47,7 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// LOGIN UESR
+// LOGIN USER
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -77,6 +77,9 @@ const getMe = asyncHandler(async (req, res) => {
   };
   res.status(200).json(user);
 });
+
+// LOG OUT USER
+const logoutUser = asyncHandler(async (req, res) => {});
 
 // generate jsonwebtoken
 const generateToken = (id) => {

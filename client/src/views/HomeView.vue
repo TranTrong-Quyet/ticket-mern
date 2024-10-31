@@ -1,9 +1,15 @@
 <script setup>
+import { useAuthStore } from '@/stores/auth';
+const userStore = useAuthStore()
+
 </script>
 
 <template>
   <section class="h-screen px-5 py-32 flex flex-col items-center justify-start">
-    <h1 class="text-4xl font-bold text-orange-600 mb-4">Open a ticket!</h1>
+    <h1 class="text-4xl font-bold text-orange-600 mb-4">
+      <span v-if="userStore.initialState.user">Hey {{ userStore.initialState.user.name }},</span>
+      Open a ticket!
+    </h1>
     <p class="text-lg text-gray-100 mb-8">Get stuck? Open a ticket now!</p>
     <div class="flex flex-col gap-y-3 sm:flex-row sm:space-x-4">
       <button
