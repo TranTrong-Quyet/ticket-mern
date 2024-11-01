@@ -2,9 +2,12 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
+// Get user from local storage
+const user = JSON.parse(localStorage.getItem("user"));
+
 export const useAuthStore = defineStore("auth", () => {
   const initialState = ref({
-    user: null,
+    user: user ? user : null,
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -88,10 +91,20 @@ export const useAuthStore = defineStore("auth", () => {
     } catch (error) {}
   };
 
+  // LOG OUT
+  const logout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    initialState.value.user = null;
+    initialState.value.isSuccess = false;
+    initialState.value.message = "Logged out successfully";
+  };
+
   return {
     initialState,
     register,
     login,
+    logout,
     // ... other methods
   };
 });

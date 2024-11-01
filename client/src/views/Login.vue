@@ -55,7 +55,7 @@ const onFormSubmit = async () => {
 </script>
 
 <template>
-  <div class="h-ful">
+  <div class="h-full">
     <Toast />
     <section class="py-20 flex flex-col item-center">
       <h2 class=" self-center text-3xl font-medium pb-10">Login</h2>

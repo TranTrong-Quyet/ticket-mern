@@ -5,7 +5,7 @@ const userStore = useAuthStore()
 </script>
 
 <template>
-  <section class="h-screen px-5 py-32 flex flex-col items-center justify-start">
+  <section class=" px-5 py-32 flex flex-col items-center justify-start">
     <h1 class="text-4xl font-bold text-orange-600 mb-4">
       <span v-if="userStore.initialState.user">Hey {{ userStore.initialState.user.name }},</span>
       Open a ticket!
