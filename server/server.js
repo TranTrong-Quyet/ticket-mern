@@ -5,6 +5,7 @@ import colors from "colors";
 import cors from "cors";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import UserRouter from "./routes/userRoutes.js";
+import TicketRouter from "./routes/ticketRoutes.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 9000;
@@ -24,6 +25,8 @@ app.get("/", (req, res) => {
 
 // auth routes
 app.use("/api/users", UserRouter);
+app.use("/api/tickets", TicketRouter);
+
 app.use(errorHandler);
 
 app.listen(PORT, () => {
