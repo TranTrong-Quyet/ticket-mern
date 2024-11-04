@@ -38,17 +38,35 @@ const onFormSubmit = async () => {
         password: password.value,
 
       }
-      authStore.login(userData)
 
-      router.push('/')
+      // Show loading state
+      const submitButton = document.querySelector('button[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Login...';
+      }
+      const loginResult = await authStore.login(userData)
+      // console.log(loginResult)
+
+      // handle on login success
+      if (loginResult.success) {
+        router.push('/')
+      } else {
+        showError('Invalid credential', 'Your email and password is not correct')
+      }
+      //
     }
 
   } catch (error) {
     console.log('Error when submit login form', error)
+  } finally {
+    const submitButton = document.querySelector('button[type="submit"]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Login';
+    }
   }
 }
-
-//test store pinia
 
 
 

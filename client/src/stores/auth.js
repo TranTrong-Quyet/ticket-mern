@@ -86,9 +86,16 @@ export const useAuthStore = defineStore("auth", () => {
           localStorage.setItem("user", JSON.stringify(initialState.value.user));
         }
 
-        return response.data;
+        return { success: true, data: response.data };
       }
-    } catch (error) {}
+    } catch (error) {
+      initialState.value.isError = true;
+      initialState.value.message =
+        error.response?.data?.message || "Invalid credentials";
+      return { success: false, error: initialState.value.message };
+    } finally {
+      initialState.value.isLoading = false;
+    }
   };
 
   // LOG OUT
