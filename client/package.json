@@ -13,6 +13,7 @@
   "dependencies": {
     "@primevue/core": "^4.1.1",
     "@primevue/themes": "^4.1.1",
+    "@vueform/vueform": "^1.11.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "lucide-vue-next": "^0.454.0",

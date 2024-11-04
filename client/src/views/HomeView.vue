@@ -14,14 +14,14 @@ const userStore = useAuthStore()
     <div class="flex flex-col gap-y-3 sm:flex-row sm:space-x-4">
       <button
         class="min-w-[200px] px-6 py-2 rounded-lg text-white bg-orange-600 hover:bg-orange-700 transition-colors duration-200 shadow-md">
-        <RouterLink to="/my-tickets">
+        <RouterLink to="/create-ticket">
           Open new ticket
         </RouterLink>
 
       </button>
       <button
         class="min-w-[200px] px-6 py-2 rounded-lg text-orange-600 border border-orange-600 hover:bg-orange-100 transition-colors duration-200 shadow-md">
-        <RouterLink to="/create-ticket">
+        <RouterLink to="/my-ticket">
           View my tickets
         </RouterLink>
       </button>

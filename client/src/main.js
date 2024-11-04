@@ -6,10 +6,13 @@ import PrimeVue from "primevue/config";
 import ToastService from "primevue/toastservice";
 import Lara from "@primevue/themes/lara";
 import "./assets/main.css";
+import Vueform from "@vueform/vueform";
+import vueformConfig from "./../vueform.config";
 
 // Add these PrimeVue style imports
 
 const app = createApp(App);
+app.use(Vueform, vueformConfig);
 app.use(PrimeVue, {
   theme: {
     preset: Lara,
