@@ -1,54 +1,73 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
-// import { Vueform, TextElement, SelectElement, TextareaElement, ButtonElement } from '@vueform/vueform'
+import { useTicketStore } from '@/stores/ticket.store';
+import { onMounted, ref, toRefs, useTemplateRef } from 'vue';
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
 
 const userStore = useAuthStore();
+const ticketStore = useTicketStore();
 
-// Form configuration
-// const formConfig = ref({
-//     size: 'md',
-//     displayErrors: false,
-//     addClass: 'vf-create-account'
-// });
+const toast = useToast()
 
-// Form schema
-const schema = ref({
-    product: {
-        type: 'select',
-        items: [
-            {
-                value: 0,
-                label: 'Label',
-            },
-        ],
-        search: true,
-        native: false,
-        label: 'Choose a product',
-        inputType: 'search',
-        autocomplete: 'on',
-    },
-    description: {
-        type: 'textarea',
-        label: 'Description',
-    }
-});
+const showError = (title, detail) => {
+    toast.add({
+        severity: "error",
+        title,
+        detail,
+        life: 3000,
+    })
+}
+
+const formData = ref({
+    product: "",
+    description: "",
+})
+
+const { product, description } = toRefs(formData.value)
+
+// change submit button on submit
+const button = useTemplateRef("submitButton")
+
+onMounted(() => {
+    console.log(button.value.textContent)
+})
 
 // Form submission handler
-// const onSubmit = (values) => {
-//     console.log('Form submitted:', values);
-//     // Handle form submission
-// };
+const handleOnSubmit = async () => {
+    // Handle form submission
+    try {
+        if (!product.value || !description.value) {
+            showError('In valid input', "Please include all fields")
+        }
+        if (product.value && description.value) {
+            const ticketData = {
+                product: product.value,
+                description: description.value,
+            }
+            console.log(ticketData)
 
-// Form validation
-const validation = {
-    product: { required: true },
-    description: { required: true, min: 10 }
+            button.value.textContent = 'Sending your ticket...'
+
+            const createTicketResult = await ticketStore.submitTicket(ticketData)
+            console.log(createTicketResult)
+
+            if (createTicketResult) {
+                button.value.textContent = "Submit new ticket"
+            }
+        }
+
+    } catch (error) {
+        console.error('There is an error:', error)
+    }
+
 };
+
 </script>
 
 <template>
     <section class="px-5 py-32 flex flex-col items-center justify-start">
+        <Toast />
         <h1 class="text-4xl font-bold text-orange-600 mb-4">
             <span v-if="userStore.initialState.user">
                 Hey {{ userStore.initialState.user.name }},
@@ -61,24 +80,36 @@ const validation = {
         </p>
 
         <div class="w-full max-w-2xl">
-            <Vueform>
-                <SelectElement name="product" :items="['Iphone', 'Ipad', 'Macbook']" rules="required"
-                    label="Choose the product you have an issue with" />
-                <TextareaElement name="description" label="Description" rules="required|min:20"
-                    placeholder="Describe the issue with your product" />
-                <ButtonElement type="submit" button-label="Submit Ticket" />
-            </Vueform>
+            <form @submit.prevent="handleOnSubmit">
+                <div class="mb-5">
+                    <label for="product" class="block mb-2 text-sm font-medium text-slate-900 dark:text-white">Select
+                        product</label>
+                    <select v-model="product" type="select" id="product"
+                        class="bg-gray-50 border border-gray-300text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="name@flowbite.com">
+
+                        <option selected>Choose a product</option>
+                        <option value="Ipad">Ipad</option>
+                        <option value="Macbook">Macbook</option>
+                        <option value="Iphone">Iphone</option>
+                        <option value="Mac Mini">Mac Mini</option>
+                        <option value="iMac">iMac</option>
+
+                    </select>
+                </div>
+                <div class="mb-5">
+                    <label for="description"
+                        class="block mb-2 text-sm font-medium text-slate-900 dark:text-white">Description</label>
+                    <textarea v-model="description" type="text" placeholder="Tell us detail about the issue"
+                        id="description" rows="4"
+                        class="bg-gray-50 border border-gray-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                </div>
+
+                <button type="submit" ref="submitButton"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit
+                    Ticket</button>
+            </form>
 
         </div>
     </section>
 </template>
-
-<!-- <style>
-/* .vf-create-account {
-    /* Add your custom form styles here */
-/* @apply w-full;
-} */
-
-/* */
-*/
-</style> -->
