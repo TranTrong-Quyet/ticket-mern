@@ -55,7 +55,15 @@ const useTicketStore = defineStore("ticket", () => {
     }
   };
 
-  return { initialState, submitTicket };
+  const resetTicket = () => {
+    initialState.value.ticket = { product: "", description: "" };
+    initialState.value.isError = false;
+    initialState.value.isLoading = false;
+    initialState.value.isSuccess = false;
+    initialState.value.message = "";
+  };
+
+  return { initialState, submitTicket, resetTicket };
 });
 
 export { useTicketStore };

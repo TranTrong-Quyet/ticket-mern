@@ -10,12 +10,21 @@ const ticketStore = useTicketStore();
 
 const toast = useToast()
 
-const showError = (title, detail) => {
+const showError = (summary, detail) => {
     toast.add({
         severity: "error",
-        title,
+        summary,
         detail,
         life: 3000,
+    })
+}
+
+const showSuccess = (summary, detail) => {
+    toast.add({
+        severity: "success",
+        summary,
+        detail,
+        life: 5000,
     })
 }
 
@@ -52,9 +61,13 @@ const handleOnSubmit = async () => {
             const createTicketResult = await ticketStore.submitTicket(ticketData)
             console.log(createTicketResult)
 
+            showSuccess('Success message', 'Your ticket is send successfully')
+
             if (createTicketResult) {
                 button.value.textContent = "Submit new ticket"
             }
+
+            ticketStore.resetTicket()
         }
 
     } catch (error) {
