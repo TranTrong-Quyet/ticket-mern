@@ -1,12 +1,27 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+console.log('My Ticket')
+import { onMounted, ref, toRef } from 'vue'
+import { defineProps } from 'vue';
+import TicketItem from '@/components/TicketItem.vue';
+
+const props = defineProps({
+    limitPostView: {
+        type: Number,
+        default: 5
+    },
+    showMoreButton: {
+        type: Boolean,
+        default: false,
+    }
+})
+
+const limitView = toRef(props, "limitPostView")
+
+
 import axios from 'axios';
-import moment from 'moment';
 import router from '@/router';
 
-const formatDate = (dateString) => {
-    return moment(dateString).format('MMM D, YYYY, h:mm A'); // Example: November 5, 2024, 3:20 PM
-};
+
 
 const userTickets = ref([])
 
@@ -49,6 +64,10 @@ onMounted(() => {
     getTickets()
 })
 
+const handleViewAllTicket = () => {
+    limitView.value = userTickets.value.length;
+};
+
 const goToTicket = () => {
     router.push('/tickets')
 }
@@ -62,34 +81,28 @@ const goToTicket = () => {
         <div class="max-w-10xl w-100 ">
             <h2 class="text-2xl font-bold mb-6">My Ticket</h2>
             <div>
-                <ul class="space-y-4">
-                    <li v-for="ticket in userTickets" :key="ticket._id"
-                        class="border border-gray-200 p-4 rounded-lg shadow-md bg-white">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">Product: {{ ticket.product }}</h3>
-                                <p class="text-gray-600">Description: {{ ticket.description }}</p>
-                            </div>
-                            <div>
-                                <span class="px-2 py-1 text-sm font-medium bg-blue-100 text-blue-600 rounded-full">{{
-                                    ticket.status }}</span>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center mt-4">
-                            <div class="text-sm text-gray-500 space-y-1">
-                                <span>Created at: {{ formatDate(ticket.createdAt) }}</span><br>
-                                <span>Latest update: {{ formatDate(ticket.updatatedAt) }}</span>
-                            </div>
-                            <div>
-                                <button @click="goToTicket"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">View
-                                    Ticket</button>
-                            </div>
-                        </div>
-                    </li>
+                <ul v-if="userTickets.length" class="space-y-4">
+                    <TicketItem v-for="(ticket, index) in userTickets.slice(0, limitPostView || userTickets.length)"
+                        :key="ticket._id || index" :ticket="ticket" />
                 </ul>
+                <div v-else
+                    class="flex flex-col items-center text-center p-6 border border-gray-200 rounded-lg shadow-md">
+                    <h1 class="text-lg text-gray-600 font-semibold mb-4">You haven't created any ticket</h1>
+                    <RouterLink to="/create-ticket">
+                        <button
+                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                            Create New Ticket
+                        </button>
+                    </RouterLink>
+                </div>
+                <div v-if="userTickets.length > limitView" class="mt-6 text-center">
+                    <button @click="handleViewAllTicket"
+                        class="px-4 py-2 text-sm font-medium text-white bg-slate-700 hover:bg-slate-600 hover:text-orange-500 rounded-lg ">
+                        View All Tickets
+                    </button>
+                </div>
+
             </div>
         </div>
-
     </section>
 </template>
