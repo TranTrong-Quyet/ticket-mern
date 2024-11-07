@@ -18,7 +18,8 @@ const props = defineProps({
     }
 })
 
-const limitView = toRef(props, "limitPostView")
+
+const limitView = ref(props.limitPostView);
 
 
 import axios from 'axios';
@@ -79,11 +80,20 @@ const goToTicket = () => {
     <section class="px-5 py-28 flex flex-col items-center justify-start">
         <Toast />
         <div class="max-w-10xl w-100 ">
-            <h2 class="text-2xl font-bold mb-6">My Ticket</h2>
+            <div class="flex flex-row mb-6 justify-between items-center align-middle">
+                <h2 class="text-2xl font-bold">My Ticket</h2>
+                <button>
+                    <RouterLink to="/create-ticket"
+                        class="px-4 py-2 text-sm font-medium text-white bg-transparent border rounded-full hover:bg-blue-700">
+                        Create new ticket
+                    </RouterLink>
+                </button>
+            </div>
+
             <div>
                 <div v-if="ticketStore.initialState.isLoading">loading.....</div>
                 <ul v-if="userTickets.length" class="space-y-4">
-                    <TicketItem v-for="(ticket, index) in userTickets.slice(0, limitPostView || userTickets.length)"
+                    <TicketItem v-for="(ticket, index) in userTickets.slice(0, limitView || userTickets.length)"
                         :key="ticket._id || index" :ticket="ticket" />
                 </ul>
                 <div v-if="!userTickets.length"

@@ -1,17 +1,27 @@
 <script setup>
 import axios from 'axios';
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
 import { formatDate } from '@/utils/formatDate';
 
 const toast = useToast()
 const route = useRoute()
+const router = useRouter()
 
 const showError = (summary, detail) => {
     toast.add({
         severity: "error",
+        summary,
+        detail,
+        life: 3000,
+    })
+}
+
+const showSuccess = (summary, detail) => {
+    toast.add({
+        severity: "success",
         summary,
         detail,
         life: 3000,
@@ -53,6 +63,29 @@ onMounted(() => {
     getTicket()
 })
 
+const closeTicket = async () => {
+    try {
+        const token = localStorage.getItem('token')
+        const response = await api.put(`api/tickets/${route.params.id}`, { status: "closed" }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+
+        if (response) {
+            showSuccess('Ticket Closed Successfully', "Ticket is closed, Enjoy")
+            router.push('my-ticket')
+        }
+
+        if (response.status == "success") {
+            console.log('closed success')
+        }
+
+    } catch (error) {
+        console.error('There is an error', error)
+    }
+}
+
 </script>
 
 <template>
@@ -67,9 +100,9 @@ onMounted(() => {
                     </h1>
                     <span :class="[
                         'px-2 py-1 text-sm font-medium rounded-full',
-                        ticket.status === 'new' ? 'bg-blue-100 text-blue-600' :
-                            ticket.status === 'opened' ? 'bg-green-100 text-green-600' :
-                                ticket.status === 'close' ? 'bg-yellow-100 text-yellow-600' : ''
+                        ticket.status === 'new' ? 'bg-blue-100 text-blue-600' : '',
+                        ticket.status === 'opened' ? 'bg-green-100 text-green-600' : '',
+                        ticket.status === 'closed' ? 'bg-yellow-100 text-yellow-600' : '',
                     ]">{{ ticket.status }}</span>
                 </div>
                 <div class="text-sm text-gray-500">Created at: {{ formatDate(ticket.createdAt) }}</div>
@@ -83,13 +116,17 @@ onMounted(() => {
 
             <!-- Ticket Replies Section -->
             <div class="space-y-4">
-                <h1 class="text-lg font-semibold text-gray-800">Replies</h1>
+                <h1 class="text-lg font-semibold text-gray-800">Notes</h1>
                 <div class="bg-gray-100 border border-gray-200 rounded-lg p-4">
                     <p class="text-gray-700">I see, I will fix the problem, let me check your Iphone.</p>
                 </div>
-                <button
+                <button v-if="ticket.status !== 'closed'"
                     class="mt-4 px-4 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800">
-                    Add Reply
+                    Add Notes
+                </button>
+                <button @click="closeTicket" v-if="ticket.status !== 'closed'"
+                    class="mt-4 px-4 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800">
+                    Close Ticket
                 </button>
             </div>
         </div>

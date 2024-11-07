@@ -12,16 +12,16 @@ const userStore = useAuthStore()
     </h1>
     <p class="text-lg text-gray-100 mb-8">Get stuck? Open a ticket now!</p>
     <div class="flex flex-col gap-y-3 sm:flex-row sm:space-x-4">
-      <button
-        class="min-w-[200px] px-6 py-2 rounded-lg text-white bg-orange-600 hover:bg-orange-700 transition-colors duration-200 shadow-md">
-        <RouterLink to="/create-ticket">
+      <button>
+        <RouterLink to="/create-ticket"
+          class="min-w-[200px] px-6 py-2 rounded-lg text-white bg-orange-600 hover:bg-orange-700 transition-colors duration-200 shadow-md">
           Open new ticket
         </RouterLink>
 
       </button>
-      <button
-        class="min-w-[200px] px-6 py-2 rounded-lg text-orange-600 border border-orange-600 hover:bg-orange-100 transition-colors duration-200 shadow-md">
-        <RouterLink to="/my-ticket">
+      <button>
+        <RouterLink to="/my-ticket"
+          class="min-w-[200px] px-6 py-2 rounded-lg text-orange-600 border border-orange-600 hover:bg-orange-100 transition-colors duration-200 shadow-md">
           View my tickets
         </RouterLink>
       </button>

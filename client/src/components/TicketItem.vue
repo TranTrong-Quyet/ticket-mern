@@ -20,9 +20,9 @@ console.log(props.ticket)
             <div>
                 <span :class="[
                     'px-2 py-1 text-sm font-medium rounded-full',
-                    ticket.status === 'new' ? 'bg-blue-100 text-blue-600' :
-                        ticket.status === 'opened' ? 'bg-green-100 text-green-600' :
-                            ticket.status === 'close' ? 'bg-yellow-100 text-yellow-600' : ''
+                    ticket.status === 'new' ? 'bg-blue-100 text-blue-600' : '',
+                    ticket.status === 'opened' ? 'bg-green-100 text-green-600' : '',
+                    ticket.status === 'closed' ? 'bg-yellow-100 text-yellow-600' : ''
                 ]">{{
                     ticket.status }}</span>
             </div>
