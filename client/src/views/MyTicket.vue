@@ -3,6 +3,9 @@ console.log('My Ticket')
 import { onMounted, ref, toRef } from 'vue'
 import { defineProps } from 'vue';
 import TicketItem from '@/components/TicketItem.vue';
+import { useTicketStore } from '../stores/ticket.store.js';
+
+const ticketStore = useTicketStore()
 
 const props = defineProps({
     limitPostView: {
@@ -48,11 +51,8 @@ const getTickets = async () => {
         console.log(response)
 
         if (response.data) {
-
-
-            userTickets.value = response.data
+            userTickets.value = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             console.log(`this is it: ${JSON.stringify(userTickets)}`)
-
         }
     } catch (error) {
         console.error("Error fetching tickets:", error);
@@ -81,11 +81,12 @@ const goToTicket = () => {
         <div class="max-w-10xl w-100 ">
             <h2 class="text-2xl font-bold mb-6">My Ticket</h2>
             <div>
+                <div v-if="ticketStore.initialState.isLoading">loading.....</div>
                 <ul v-if="userTickets.length" class="space-y-4">
                     <TicketItem v-for="(ticket, index) in userTickets.slice(0, limitPostView || userTickets.length)"
                         :key="ticket._id || index" :ticket="ticket" />
                 </ul>
-                <div v-else
+                <div v-if="!userTickets.length"
                     class="flex flex-col items-center text-center p-6 border border-gray-200 rounded-lg shadow-md">
                     <h1 class="text-lg text-gray-600 font-semibold mb-4">You haven't created any ticket</h1>
                     <RouterLink to="/create-ticket">

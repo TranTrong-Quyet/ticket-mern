@@ -1,0 +1,98 @@
+<script setup>
+import axios from 'axios';
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useToast } from 'primevue/usetoast';
+import Toast from 'primevue/toast';
+import { formatDate } from '@/utils/formatDate';
+
+const toast = useToast()
+const route = useRoute()
+
+const showError = (summary, detail) => {
+    toast.add({
+        severity: "error",
+        summary,
+        detail,
+        life: 3000,
+    })
+}
+
+
+const ticket = ref({})
+
+const API_URL = 'http://localhost:8000/'
+const api = axios.create({
+    baseURL: API_URL,
+    headers: {
+        "Content-Type": "application/json"
+    }
+})
+
+const getTicket = async () => {
+    try {
+        const token = localStorage.getItem('token')
+        const response = await api.get(`api/tickets/${route.params.id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+
+        if (response.data) {
+            ticket.value = response.data
+            console.log(ticket.value)
+        } else {
+            showError('Error', "There is an error fetching data")
+        }
+    } catch (error) {
+        console.error('There is an error', error)
+    }
+}
+
+onMounted(() => {
+    getTicket()
+})
+
+</script>
+
+<template>
+    <div class="w-[950px] mx-auto p-4 md:p-8 lg:p-12">
+        <Toast />
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md space-y-6">
+            <!-- Ticket Header -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-lg font-semibold text-gray-800">Product: <span class="text-gray-600">{{
+                        ticket.product }}</span>
+                    </h1>
+                    <span :class="[
+                        'px-2 py-1 text-sm font-medium rounded-full',
+                        ticket.status === 'new' ? 'bg-blue-100 text-blue-600' :
+                            ticket.status === 'opened' ? 'bg-green-100 text-green-600' :
+                                ticket.status === 'close' ? 'bg-yellow-100 text-yellow-600' : ''
+                    ]">{{ ticket.status }}</span>
+                </div>
+                <div class="text-sm text-gray-500">Created at: {{ formatDate(ticket.createdAt) }}</div>
+            </div>
+            <div class="w-full h-[1px] bg-slate-300"></div>
+            <!-- Ticket Description -->
+            <div>
+                <h2 class="text-xl font-bold text-gray-800">Issue:</h2>
+                <p class="text-gray-700 mt-2">{{ ticket.description }}</p>
+            </div>
+
+            <!-- Ticket Replies Section -->
+            <div class="space-y-4">
+                <h1 class="text-lg font-semibold text-gray-800">Replies</h1>
+                <div class="bg-gray-100 border border-gray-200 rounded-lg p-4">
+                    <p class="text-gray-700">I see, I will fix the problem, let me check your Iphone.</p>
+                </div>
+                <button
+                    class="mt-4 px-4 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800">
+                    Add Reply
+                </button>
+            </div>
+        </div>
+
+    </div>
+</template>

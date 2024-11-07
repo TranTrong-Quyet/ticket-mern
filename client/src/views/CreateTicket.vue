@@ -4,6 +4,9 @@ import { useTicketStore } from '@/stores/ticket.store';
 import { onMounted, ref, toRefs, useTemplateRef } from 'vue';
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const userStore = useAuthStore();
 const ticketStore = useTicketStore();
@@ -68,6 +71,8 @@ const handleOnSubmit = async () => {
             }
 
             ticketStore.resetTicket()
+
+            router.push('/my-ticket')
         }
 
     } catch (error) {

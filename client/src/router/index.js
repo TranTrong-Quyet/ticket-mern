@@ -5,6 +5,7 @@ import Login from "@/views/Login.vue";
 import CreateTicket from "@/views/CreateTicket.vue";
 import PrivateView from "@/views/PrivateView.vue";
 import MyTicket from "@/views/MyTicket.vue";
+import SingleTicket from "@/views/SingleTicket.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,11 @@ const router = createRouter({
           path: "/my-ticket",
           name: "my-ticket",
           component: MyTicket,
+        },
+        {
+          path: "/ticket/:id",
+          name: "single-ticket",
+          component: SingleTicket,
         },
       ],
     },

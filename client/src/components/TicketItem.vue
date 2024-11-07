@@ -33,9 +33,11 @@ console.log(props.ticket)
                 <span>Latest update: {{ formatDate(ticket.updatatedAt) }}</span>
             </div>
             <div>
-                <button @click="goToTicket"
-                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">View
-                    Ticket</button>
+                <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                    <RouterLink :to="`/ticket/${ticket._id}`">
+                        View Ticket
+                    </RouterLink>
+                </button>
             </div>
         </div>
     </li>
