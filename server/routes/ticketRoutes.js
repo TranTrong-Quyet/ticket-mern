@@ -10,6 +10,9 @@ import {
   updateTicket,
 } from "../controllers/TicketController.js";
 import { protectRoute } from "../middleware/authMiddleware.js";
+import NoteRouter from "./noteRoutes.js";
+
+TicketRouter.use("/:ticketId/notes", NoteRouter);
 
 TicketRouter.get("/", protectRoute, getTickets);
 TicketRouter.route("/:id")
