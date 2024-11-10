@@ -39,6 +39,7 @@ const useTicketStore = defineStore("ticket", () => {
           Authorization: `Bearer ${token}`, // Replace with actual token if needed
         },
       });
+
       if (response.data) {
         console.log("there is a response");
         initialState.value.isSuccess = true;

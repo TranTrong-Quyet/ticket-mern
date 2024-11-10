@@ -6,6 +6,9 @@ import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
 import { formatDate } from '@/utils/formatDate';
 
+import { useNoteStore } from '@/stores/note.store';
+
+const noteStore = useNoteStore()
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
@@ -30,6 +33,8 @@ const showSuccess = (summary, detail) => {
 
 
 const ticket = ref({})
+const notes = ref([])
+
 
 const API_URL = 'http://localhost:8000/'
 const api = axios.create({
@@ -59,8 +64,11 @@ const getTicket = async () => {
     }
 }
 
-onMounted(() => {
-    getTicket()
+onMounted(async () => {
+    getTicket();
+    await noteStore.getNote()
+    console.log(noteStore.initialState.notes)
+    notes.value = noteStore.initialState.notes;
 })
 
 const closeTicket = async () => {
@@ -91,6 +99,8 @@ const closeTicket = async () => {
 <template>
     <div class="w-[950px] mx-auto p-4 md:p-8 lg:p-12">
         <Toast />
+        <div>{{ notes }}</div>
+        <div class="bg-blue-300">{{ noteStore.initialState.note }}</div>
         <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md space-y-6">
             <!-- Ticket Header -->
             <div class="space-y-2">
@@ -111,23 +121,31 @@ const closeTicket = async () => {
             <!-- Ticket Description -->
             <div>
                 <h2 class="text-xl font-bold text-gray-800">Issue:</h2>
-                <p class="text-gray-700 mt-2">{{ ticket.description }}</p>
+                <p class="text-gray-700 mt-2 font-medium text-lg">{{ ticket.description }}</p>
             </div>
 
             <!-- Ticket Replies Section -->
             <div class="space-y-4">
                 <h1 class="text-lg font-semibold text-gray-800">Notes</h1>
-                <div class="bg-gray-100 border border-gray-200 rounded-lg p-4">
-                    <p class="text-gray-700">I see, I will fix the problem, let me check your Iphone.</p>
+                <div class="flex flex-col gap-y-4">
+                    <div v-for="note in notes" :key="note._id"
+                        class="bg-gray-100 border flex items-start justify-between border-gray-200 rounded-lg p-4">
+                        <p class="text-gray-700">{{ note.text }}</p>
+                        <span class="text-gray-700 italic text-sm">{{ formatDate(note.createdAt) }}</span>
+                    </div>
+
                 </div>
-                <button v-if="ticket.status !== 'closed'"
-                    class="mt-4 px-4 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800">
-                    Add Notes
-                </button>
-                <button @click="closeTicket" v-if="ticket.status !== 'closed'"
-                    class="mt-4 px-4 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800">
-                    Close Ticket
-                </button>
+                <div class="flex justify-center">
+
+                    <button v-if="ticket.status !== 'closed'"
+                        class="mt-4 px-4 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800">
+                        Add Notes
+                    </button>
+                    <button @click="closeTicket" v-if="ticket.status !== 'closed'"
+                        class="mt-4 ml-auto px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-100 bg-slate-200 rounded-lg hover:bg-slate-800">
+                        Close Ticket
+                    </button>
+                </div>
             </div>
         </div>
 
