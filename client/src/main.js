@@ -8,6 +8,8 @@ import Lara from "@primevue/themes/lara";
 import "./assets/main.css";
 import Vueform from "@vueform/vueform";
 import vueformConfig from "./../vueform.config";
+//in your `main.js` file
+import "../node_modules/flowbite-vue/dist/index.css";
 
 // Add these PrimeVue style imports
 

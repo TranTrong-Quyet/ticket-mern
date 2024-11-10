@@ -16,6 +16,8 @@
     "@vueform/vueform": "^1.11.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
+    "flowbite": "^2.5.2",
+    "flowbite-vue": "^0.1.6",
     "lucide-vue-next": "^0.454.0",
     "pinia": "^2.2.4",
     "primeicons": "^7.0.0",
