@@ -65,9 +65,7 @@ const useNoteStore = defineStore("note", () => {
         initialState.value.isSuccess = true;
         initialState.value.message = "Returned notes data";
         initialState.value.isSuccess = true;
-        initialState.value.notes = initialState.value.notes.unshift(
-          response.data,
-        );
+        initialState.value.notes.unshift(response.data);
       }
 
       return response.data;

@@ -172,11 +172,13 @@ const handleAddNoteFormSubmit = async () => {
             <!-- Ticket Replies Section -->
             <div class="space-y-4">
                 <div class="flex justify-between item-center">
-                    <h1 class="text-lg font-semibold text-gray-800">Notes</h1> <fwb-button @click="showModal"
-                        v-if="ticket.status !== 'closed'"
+                    <h1 class="text-lg font-semibold text-gray-800">Notes</h1>
+                    <!-- <fwb-button @click="showModal"
+
+                        v-if="ticket.status !== 'closed"
                         class=" px-4 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800">
                         Add note
-                    </fwb-button>
+                    </fwb-button> -->
                 </div>
 
                 <div class="flex flex-col gap-y-4">
