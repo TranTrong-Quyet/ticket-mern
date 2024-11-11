@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, toRef, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
@@ -48,6 +48,12 @@ const showSuccess = (summary, detail) => {
 
 const ticket = ref({})
 const notes = ref([])
+
+const noteFormData = ref({
+    noteText: ""
+});
+
+const { noteText } = toRefs(noteFormData.value)
 
 
 const API_URL = 'http://localhost:8000/'
@@ -108,6 +114,30 @@ const closeTicket = async () => {
     }
 }
 
+// handleAddNoteFormSubmit
+const handleAddNoteFormSubmit = async () => {
+    try {
+        const ticketId = route.params.id
+
+        const noteData = {
+            text: noteText.value
+        }
+        console.log(noteData)
+        const addNoteResult = await noteStore.addNote(ticketId, noteData)
+
+        if (addNoteResult) {
+            showSuccess('Note Added Successfully', 'Your note has been added.');
+            closeModal()
+            noteText.value = ""
+        } else {
+            showError('Error', 'Failed to add note.');
+        }
+        console.log(addNoteResult)
+    } catch (error) {
+        console.error('there is an error', error)
+    }
+}
+
 
 
 </script>
@@ -115,7 +145,6 @@ const closeTicket = async () => {
 <template>
     <div class="w-[950px] mx-auto p-4 md:p-8 lg:p-12">
         <Toast />
-        <div>{{ notes }}</div>
         <div class="bg-blue-300">{{ noteStore.initialState.note }}</div>
         <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md space-y-6">
             <!-- Ticket Header -->
@@ -175,12 +204,12 @@ const closeTicket = async () => {
             </template>
             <template #body>
                 <div>
-                    <form @submit.prevent="() => { console.log('submit note') }">
+                    <form @submit.prevent="handleAddNoteFormSubmit">
                         <div class="mb-5">
                             <label for="noteText"
                                 class="block mb-2 text-sm font-medium text-slate-900 dark:text-white">Note
                                 content</label>
-                            <textarea v-model="description" type="text" placeholder="Write your note here" id="noteText"
+                            <textarea v-model="noteText" type="text" placeholder="Write your note here" id="noteText"
                                 rows="4"
                                 class="bg-gray-50 border border-gray-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         </div>

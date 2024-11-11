@@ -42,10 +42,38 @@ const useNoteStore = defineStore("note", () => {
     }
   };
 
-  const addNote = async (noteData) => {
+  const addNote = async (ticketId, noteData) => {
     try {
-      api.post();
-    } catch (error) {}
+      const token = localStorage.getItem("token");
+
+      initialState.value.isLoading = true;
+      initialState.value.message = "Submitting your note";
+
+      const response = await api.post(
+        `/api/tickets/${ticketId}/notes/`,
+        noteData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.data) {
+        initialState.value.isSuccess = true;
+        initialState.value.message = "Returned notes data";
+        initialState.value.isSuccess = true;
+        initialState.value.notes = initialState.value.notes.push(response.data);
+      }
+
+      return response.data;
+    } catch (error) {
+      initialState.value.isError = true;
+      initialState.value.message = error.message || "Failed to add note";
+      console.error("There is an error when adding note:", error);
+    } finally {
+      initialState.value.isLoading = false;
+    }
   };
 
   return { addNote, initialState, getNote };
