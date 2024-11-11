@@ -18,9 +18,11 @@ app.use(
   cors({
     origin: [
       "http://localhost:3001",
-      "https://your-production-frontend-url.com",
+      "https://ticket-mern-kgid1e7xx-phils-projects-68dc0131.vercel.app",
     ],
-    credentials: true, // If you’re using cookies for authentication
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"], // Include Authorization
+    credentials: true,
   })
 );
 app.use(express.json());
