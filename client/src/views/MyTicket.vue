@@ -4,6 +4,7 @@ import { onMounted, ref, toRef } from 'vue'
 import { defineProps } from 'vue';
 import TicketItem from '@/components/TicketItem.vue';
 import { useTicketStore } from '../stores/ticket.store.js';
+import dotenv from 'dotenv'
 
 const ticketStore = useTicketStore()
 
@@ -29,10 +30,10 @@ import router from '@/router';
 
 const userTickets = ref([])
 
-const API_URL = 'http://localhost:8000/'
+
 
 const api = axios.create({
-    baseURL: API_URL,
+    baseURL: import.meta.env.VITE_API_URL,
     headers: {
         "Content-Type": "application/json",
     }

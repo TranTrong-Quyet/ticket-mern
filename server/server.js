@@ -14,7 +14,15 @@ const PORT = process.env.PORT || 9000;
 connectDB();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3001",
+      "https://your-production-frontend-url.com",
+    ],
+    credentials: true, // If you’re using cookies for authentication
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
