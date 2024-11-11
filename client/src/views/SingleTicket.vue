@@ -171,7 +171,14 @@ const handleAddNoteFormSubmit = async () => {
 
             <!-- Ticket Replies Section -->
             <div class="space-y-4">
-                <h1 class="text-lg font-semibold text-gray-800">Notes</h1>
+                <div class="flex justify-between item-center">
+                    <h1 class="text-lg font-semibold text-gray-800">Notes</h1> <fwb-button @click="showModal"
+                        v-if="ticket.status !== 'closed'"
+                        class=" px-4 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800">
+                        Add note
+                    </fwb-button>
+                </div>
+
                 <div class="flex flex-col gap-y-4">
                     <div v-for="note in notes" :key="note._id"
                         class="bg-gray-100 border flex items-start justify-between border-gray-200 rounded-lg p-4">

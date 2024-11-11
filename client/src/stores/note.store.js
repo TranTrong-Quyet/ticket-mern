@@ -31,7 +31,9 @@ const useNoteStore = defineStore("note", () => {
       });
 
       if (response.data) {
-        initialState.value.notes = response.data;
+        initialState.value.notes = response.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        );
         initialState.value.isSuccess = true;
       }
     } catch (error) {
@@ -63,7 +65,9 @@ const useNoteStore = defineStore("note", () => {
         initialState.value.isSuccess = true;
         initialState.value.message = "Returned notes data";
         initialState.value.isSuccess = true;
-        initialState.value.notes = initialState.value.notes.push(response.data);
+        initialState.value.notes = initialState.value.notes.unshift(
+          response.data,
+        );
       }
 
       return response.data;
