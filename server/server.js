@@ -16,10 +16,7 @@ connectDB();
 const app = express();
 app.use(
   cors({
-    origin: [
-      "http://localhost:3001",
-      "https://ticket-mern-kgid1e7xx-phils-projects-68dc0131.vercel.app",
-    ],
+    origin: ["http://localhost:3001", "https://ticket-mern.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"], // Include Authorization
     credentials: true,
